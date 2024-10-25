@@ -8,6 +8,10 @@ namespace Proyecto2
 {
     internal class Biblioteca
     {
-
+            static void AgregarLibro(LinkedList<Libro> listaDeLibros, Libro libro)
+            {
+            listaDeLibros.AddLast(libro);
+            }            
     }
 }
+
