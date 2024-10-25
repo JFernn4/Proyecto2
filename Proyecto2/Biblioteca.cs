@@ -15,7 +15,7 @@ namespace Proyecto2
             static void BuscarLibro(LinkedList<Libro> listaDeLibros, Libro libro)
             {
             }
-        public int BusquedaSecuencial(LinkedList<Libro> listaDeLibros, string isbn)
+        public int BusquedaSecuencialLista(LinkedList<Libro> listaDeLibros, string isbn)
         {
             int indice = 0;
             LinkedListNode<Libro> nodoActual = listaDeLibros.First;
