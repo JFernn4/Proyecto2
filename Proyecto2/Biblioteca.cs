@@ -114,7 +114,39 @@ namespace Proyecto2
                 nodoquepasa = nodoquepasa.Next;
             }
         }
+        public bool EliminarUsuario(LinkedList<Usuario> listaDeUsuarios, int id)
+        {
+            LinkedListNode<Usuario> nodoActual = listaDeUsuarios.First;
+            LinkedListNode<Usuario> anterior = null;
 
+            while (nodoActual != null)
+            {
+                if (nodoActual.ValueRef.ID == id)
+                {
+                    if (anterior == null)
+                    {
+
+                        listaDeUsuarios.RemoveFirst();
+                        Console.WriteLine("Usuario retirado exitosamente.");
+                        return true;
+                    }
+                    else
+                    {
+                        listaDeUsuarios.Remove(nodoActual);
+                        Console.WriteLine("Usuario retirado exitosamente.");
+                        return true;
+                    }
+
+                }
+
+
+                anterior = nodoActual;
+                nodoActual = nodoActual.Next;
+            }
+            Console.WriteLine("Usuario no encontrado.");
+            return false;
+
+        }
 
 
     }
