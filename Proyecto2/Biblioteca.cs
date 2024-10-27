@@ -8,13 +8,12 @@ namespace Proyecto2
 {
     internal class Biblioteca
     {
-            static void AgregarLibro(LinkedList<Libro> listaDeLibros, Libro libro)
-            {
+        static void AgregarLibro(LinkedList<Libro> listaDeLibros, Libro libro)
+        {
             listaDeLibros.AddLast(libro);
-            }     
-            static void BuscarLibro(LinkedList<Libro> listaDeLibros, Libro libro)
-            {
-            }
+            Console.WriteLine("Libro agregado exitosamente.");
+        }
+
         public int BusquedaSecuencialLista(LinkedList<Libro> listaDeLibros, string isbn)
         {
             int indice = 0;
@@ -30,6 +29,78 @@ namespace Proyecto2
             }
             return -1;
         }
+         public bool RetirarLibro(LinkedList<Libro> listaDeLibros, string isbn)
+        {
+            LinkedListNode<Libro> nodoActual = listaDeLibros.First;
+            LinkedListNode<Libro> anterior = null;
+
+            while (nodoActual != null)
+            {
+                if (nodoActual.ValueRef.Isbn == isbn)
+                {
+                    if (anterior == null)
+                    {
+                        listaDeLibros.RemoveFirst();
+                        Console.WriteLine("Libro retirado éxitosamente.");
+                    }
+                    else
+                    {
+                        listaDeLibros.Remove(nodoActual);
+                        Console.WriteLine("Libro retirado éxitosamente.");
+                    }
+                    return true;
+                }
+                anterior = nodoActual;
+                nodoActual = nodoActual.Next;
+            }
+            Console.WriteLine("Libro no encontrado.");
+            return false;
+
+        }
+    
+        public void RegistrarUsuario(LinkedList<Usuario> listaDeUsuarios, Usuario usuario)
+        {
+            listaDeUsuarios.AddLast(usuario);
+            Console.WriteLine("Usuario agregado exitosamente");
+        }
+
+        public void EditarUsuario(LinkedList<Usuario> listaDeUsuarios,int id )
+        {
+            int indice = 0;
+            Usuario NodoEditar;
+            LinkedListNode<Usuario> nodoActualUsuario = listaDeUsuarios.First;
+            while (nodoActualUsuario != null)
+            {
+
+                if (nodoActualUsuario.ValueRef.ID == id)
+                {
+            Console.WriteLine("¿Qué desea editar?");
+            Console.WriteLine("1. Nombre");
+            Console.WriteLine("2. Rol");
+            int opcion = Convert.ToInt32(Console.ReadLine());
+            switch (opcion)
+            {
+                case 1:
+                    Console.WriteLine("Ingrese el nuevo nombre: ");
+                    string nuevonombre = Console.ReadLine();
+                    nodoActualUsuario.ValueRef.Nombre = nuevonombre;
+                    Console.WriteLine($"Nombre editado exitosamente a {nodoActualUsuario.ValueRef.Nombre}");
+                    break;
+                case 2:
+                    Console.WriteLine("Ingrese el nuevo Rol: ");
+                    string nuevorol = Console.ReadLine();
+                    nodoActualUsuario.ValueRef.Rol = nuevorol;
+                    Console.WriteLine($"Rol editado exitosamente a {nodoActualUsuario.ValueRef.Rol}");
+                    break;
+            }
+                   
+                }
+                nodoActualUsuario = nodoActualUsuario.Next;
+                indice++;
+            }
+        }
+
+
 
     }
 }

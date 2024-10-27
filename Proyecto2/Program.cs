@@ -1,5 +1,5 @@
 ﻿using Proyecto2;
-
+LinkedList<Usuario> listaDeUsuarios = new LinkedList<Usuario>();
 Biblioteca biblioteca = new Biblioteca();
 LinkedList<Libro> listaDeLibros = new LinkedList<Libro>();
 bool menu = true;
@@ -14,7 +14,8 @@ while (menu)
         {
             case 1:
                 {
-                    
+                    Biblioteca biblioteca1 = new Biblioteca();
+                    biblioteca1.RetirarLibro(listaDeLibros, "123");
                     break;
                 }
             case 2:
