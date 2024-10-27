@@ -99,6 +99,21 @@ namespace Proyecto2
                 indice++;
             }
         }
+        public void GenerarÏnforme(LinkedList<Libro> listaDeLibros)
+        {
+            LinkedListNode<Libro> nodoquepasa = listaDeLibros.First;
+            Console.WriteLine("PRESTAMOS ACTIVOS");
+            while (nodoquepasa != null)
+            {
+                if (nodoquepasa.ValueRef.Disponibilidad == false)
+                {
+
+                    Console.WriteLine($"Título del libro: {nodoquepasa.ValueRef.Titulo}, Autor: {nodoquepasa.ValueRef.Autor}, Genero: {nodoquepasa.ValueRef.Genero}, ISBN: {nodoquepasa.ValueRef.Isbn}");
+                    Console.WriteLine("");
+                }
+                nodoquepasa = nodoquepasa.Next;
+            }
+        }
 
 
 
