@@ -8,10 +8,9 @@ namespace Proyecto2
 {
     internal class Lector:Usuario
     {
-        public string Rol { get; set; }
-        public Lector(int iD, string nombre) : base(iD, nombre)
+        public Lector(int iD, string nombre, string rol) : base(iD, nombre,rol)
         {
-            Rol = "Lector";
+            rol = "Lector";
         }
     }
 }

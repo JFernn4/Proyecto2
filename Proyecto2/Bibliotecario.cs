@@ -8,8 +8,7 @@ namespace Proyecto2
 {
     internal class Bibliotecario : Usuario
     {
-        public string Rol {  get; set; }
-        public Bibliotecario(int iD, string nombre) : base(iD, nombre)
+        public Bibliotecario(int iD, string nombre, string rol) : base(iD, nombre, rol)
         {
             Rol = "Bibliotecario";
         }

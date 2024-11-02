@@ -14,13 +14,13 @@ namespace Proyecto2
         public string Isbn  { get; set; }
         public string Genero { get; set; }
         public bool Disponibilidad { get; set; } 
-        public Libro(string Titulo, string Autor, string ISBN, string Genero, bool Disponibilidad)
+        public Libro(string titulo, string autor, string iSBN, string genero, bool disponibilidad)
         { 
-            Titulo = Titulo;
-            Autor = Autor;
-            Isbn = ISBN;
-            Genero = Genero;
-            Disponibilidad = Disponibilidad;
+            Titulo = titulo;
+            Autor = autor;
+            Isbn = iSBN;
+            Genero = genero;
+            Disponibilidad = disponibilidad;
         }
         
     }
