@@ -2,51 +2,120 @@
 LinkedList<Usuario> listaDeUsuarios = new LinkedList<Usuario>();
 Biblioteca biblioteca = new Biblioteca();
 LinkedList<Libro> listaDeLibros = new LinkedList<Libro>();
+Bibliotecario bibliotecarioPorDefecto = new Bibliotecario("1232", "bibliotecario1","bibliotecario123", "Bibliotecario");
+Lector lectorPorDefecto = new Lector("4321", "lector1", "lector123", "Lector");
 bool menu = true;
 int opcion = 0;
 while (menu)
 {
-    try
+    Console.Clear();
+    MostrarMenuPrincipal();
+    opcion = Convert.ToInt32(Console.ReadLine());
+    switch (opcion)
     {
-        MostrarMenu();
-        opcion = Convert.ToInt32(Console.ReadLine());
-        switch (opcion)
-        {
-            case 1:
+        case 1:
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                Console.WriteLine("                                             INICIO DE SESIÓN");
+                Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                Console.ResetColor();
+                Console.WriteLine("");
+                Console.Write("                                             o Nombre: ");
+                string nombre = Console.ReadLine();
+                Console.Write("                                             o Contraseña: ");
+                string contrasena = Console.ReadLine();
+                bool verificacion = biblioteca.InicioSesionBibliotecario(listaDeUsuarios, nombre, contrasena);
+                if (verificacion == true || (nombre == bibliotecarioPorDefecto.Nombre && contrasena == bibliotecarioPorDefecto.Contrasena))
                 {
-                    MenuGestionLibros(biblioteca,listaDeLibros);
-                    break;
+                    bool menuBibliotecario = true;
+                    int opcionBibliotecario = 0;
+                    while (menuBibliotecario)
+                    {
+                        try
+                        {
+                            MostrarMenu();
+                            opcion = Convert.ToInt32(Console.ReadLine());
+                            switch (opcion)
+                            {
+                                case 1:
+                                    {
+                                        MenuGestionLibros(biblioteca, listaDeLibros);
+                                        break;
+                                    }
+                                case 2:
+                                    {
+                                        MenuGestionUsuarios(biblioteca, listaDeUsuarios);
+                                        break;
+                                    }
+                                case 3:
+                                    {
+                                        MenuGestionPrestamos();
+                                        break;
+                                    }
+                                case 4:
+                                    {
+                                        biblioteca.GenerarInforme(listaDeLibros);
+                                        break;
+                                    }
+                                case 5:
+                                    {
+                                        Console.Clear();
+                                        menuBibliotecario = false;
+                                        break;
+                                    }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
+                            Console.WriteLine("                                             - Ingresa un número del 1 al 5.");
+                            Console.ResetColor();
+                            Console.ReadKey();
+                        }
+                    }
                 }
-            case 2:
-                {
-                    MenuGestionUsuarios(biblioteca, listaDeUsuarios);
-                    break;
-                }
-            case 3:
-                {
-                    MenuGestionPrestamos();
-                    break;
-                }
-            case 4:
-                {
-                    biblioteca.GenerarInforme(listaDeLibros);
-                    break;
-                }
-            case 5:
+                else
                 {
                     Console.Clear();
-                    menu = false;
-                    break;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                    Console.WriteLine("                                             INICIO DE SESIÓN");
+                    Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                    Console.ResetColor();
+                    Console.WriteLine("");
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.WriteLine("                                             - Credenciales incorrectas o permiso denegado");
+                    Console.ResetColor();
+                    Console.ReadKey();
                 }
-        }
+                break;
+            }
+        case 2:
+            {
+                break;
+            }
+        case 3:
+            {
+                Console.Clear ();
+                menu = false;
+                break;
+            }
     }
-    catch (Exception ex)
-    {
-        Console.ForegroundColor = ConsoleColor.DarkRed;
-        Console.WriteLine("                                             - Ingresa un número del 1 al 5.");
-        Console.ResetColor();
-        Console.ReadKey();
-    }
+}
+static void MostrarMenuPrincipal()
+{
+    Console.Clear();
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+    Console.WriteLine("                                             SISTEMA BIBLIOTECA");
+    Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+    Console.ResetColor();
+    Console.WriteLine("");
+    Console.WriteLine("                                             [1] Ingresar como bibliotecario");
+    Console.WriteLine("                                             [2] Ingresar como lector");
+    Console.WriteLine("                                             [3] Salir ");
 }
 static void MenuGestionLibros(Biblioteca biblioteca, LinkedList<Libro> listaDeLibros)
 {
@@ -218,5 +287,5 @@ static void MostrarMenu()
     Console.WriteLine("                                             [2] Gestión de usuarios.");
     Console.WriteLine("                                             [3] Gestión de préstamos.");
     Console.WriteLine("                                             [4] Generar informe.");
-    Console.WriteLine("                                             [5] Salir del sistema.");
+    Console.WriteLine("                                             [5] Cerrar sesión.");
 }

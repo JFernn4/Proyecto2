@@ -8,6 +8,18 @@ namespace Proyecto2
 {
     internal class Biblioteca
     {
+        public bool InicioSesionBibliotecario(LinkedList<Usuario>listaDeUsuarios, string nombre, string contrasena)
+        {
+            int indice = BusquedaSecuencialBibliotecarios(listaDeUsuarios, listaDeUsuarios.First, nombre, contrasena, 0);
+            if (indice != -1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public void AgregarLibro(LinkedList<Libro> listaDeLibros)
         {
             Console.Clear();
@@ -244,8 +256,10 @@ namespace Proyecto2
             {
                 Console.Write("                                             o Nombre: ");
                 string nombre = Console.ReadLine();
+                Console.Write("                                             o Contraseña: ");
+                string contrasena = Console.ReadLine();
                 string rol = "Lector";
-                Lector lector = new Lector(iD, nombre,rol);
+                Lector lector = new Lector(iD, nombre,contrasena,rol);
                 listaDeUsuarios.AddLast(lector);
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine();
@@ -278,8 +292,10 @@ namespace Proyecto2
             {
                 Console.Write("                                             o Nombre: ");
                 string nombre = Console.ReadLine();
+                Console.Write("                                             o Contraseña: ");
+                string contrasena = Console.ReadLine();
                 string rol = "Bibliotecario";
-                Bibliotecario bibliotecario= new Bibliotecario(iD, nombre, rol);
+                Bibliotecario bibliotecario= new Bibliotecario(iD, nombre, contrasena, rol);
                 listaDeUsuarios.AddLast(bibliotecario);
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine();
@@ -490,6 +506,20 @@ namespace Proyecto2
                 }
                 nodoquepasa = nodoquepasa.Next;
             }
+        }
+        public int BusquedaSecuencialBibliotecarios(LinkedList<Usuario> listaDeUsuarios, LinkedListNode<Usuario> nodoActual, string nombre,string contrasena, int indice)
+        {
+            //caso base
+            if (nodoActual == null)
+            {
+                return -1;
+            }
+            if (nodoActual.Value.Nombre == nombre && nodoActual.Value.Contrasena == contrasena && nodoActual.Value.Rol == "Bibliotecario")
+            {
+                return indice;
+            }
+            //llamada recursiva
+            return BusquedaSecuencialBibliotecarios(listaDeUsuarios, nodoActual.Next, nombre,contrasena, indice + 1);
         }
     }
 }
