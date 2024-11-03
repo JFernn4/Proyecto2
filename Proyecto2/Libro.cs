@@ -9,13 +9,15 @@ namespace Proyecto2
 {
     internal class Libro
     {
+        public int Stock { get; set; }
         public string Titulo { get; set; }
         public string Autor { get; set; }
         public string Isbn  { get; set; }
         public string Genero { get; set; }
         public bool Disponibilidad { get; set; } 
-        public Libro(string titulo, string autor, string iSBN, string genero, bool disponibilidad)
+        public Libro(int stock, string titulo, string autor, string iSBN, string genero, bool disponibilidad)
         { 
+            Stock = stock;
             Titulo = titulo;
             Autor = autor;
             Isbn = iSBN;

@@ -41,7 +41,9 @@ namespace Proyecto2
             Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
             Console.ResetColor();
             Console.WriteLine("");
-                Console.Write("                                             o Título: ");
+            Console.Write("                                             o Stock: ");
+            int stock = Convert.ToInt32(Console.ReadLine());
+            Console.Write("                                             o Título: ");
             string titulo= Console.ReadLine();
                 Console.Write("                                             o Autor: ");
             string autor= Console.ReadLine();
@@ -61,7 +63,7 @@ namespace Proyecto2
                 Console.Write("                                             o Género: ");
                 string genero = Console.ReadLine();
                 bool disponibilidad = true;
-                Libro libro = new Libro(titulo, autor, iBSN, genero, disponibilidad);
+                Libro libro = new Libro(stock,titulo, autor, iBSN, genero, disponibilidad);
                 listaDeLibros.AddLast(libro);
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine();
@@ -102,6 +104,9 @@ namespace Proyecto2
                         Console.WriteLine();
                         Console.WriteLine("                                             Detalles del libro encontrado:");
                         Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("                                             o "); Console.ResetColor();
+                        Console.WriteLine($"Stock: {libro.Stock}");
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("                                             o "); Console.ResetColor();
                         Console.WriteLine($"Título: {libro.Titulo}");
@@ -171,6 +176,9 @@ namespace Proyecto2
                         Console.WriteLine("");
                         Console.WriteLine("                                             Detalles del libro encontrado:");
                         Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("                                             o "); Console.ResetColor();
+                        Console.WriteLine($"Stock: {libro.Stock}");
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("                                             o "); Console.ResetColor();
                         Console.WriteLine($"Título: {libro.Titulo}");
