@@ -42,8 +42,8 @@ while (menu)
     }
     catch (Exception ex)
     {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("Ingresa un número del 1 al 7.");
+        Console.ForegroundColor = ConsoleColor.DarkRed;
+        Console.WriteLine("                                             - Ingresa un número del 1 al 5.");
         Console.ResetColor();
         Console.ReadKey();
     }
@@ -54,6 +54,8 @@ static void MenuGestionLibros(Biblioteca biblioteca, LinkedList<Libro> listaDeLi
     bool menu = true;
     while (menu)
     {
+        try
+        {
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
@@ -66,28 +68,36 @@ static void MenuGestionLibros(Biblioteca biblioteca, LinkedList<Libro> listaDeLi
         Console.WriteLine("                                             [3] Eliminar un libro");
         Console.WriteLine("                                             [4] Regresar a menú principal ");
         opcion = Convert.ToInt32(Console.ReadLine());
-        switch (opcion)
+            switch (opcion)
+            {
+                case 1:
+                    {
+                        biblioteca.AgregarLibro(listaDeLibros);
+                        break;
+                    }
+                case 2:
+                    {
+                        biblioteca.BuscarLibro(listaDeLibros);
+                        break;
+                    }
+                case 3:
+                    {
+                        biblioteca.EliminarLibro(listaDeLibros);
+                        break;
+                    }
+                case 4:
+                    {
+                        menu = false;
+                        break; ;
+                    }
+            }
+        }
+        catch (Exception ex)
         {
-            case 1:
-                {
-                    biblioteca.AgregarLibro(listaDeLibros);
-                    break;
-                }
-            case 2:
-                {
-                    biblioteca.BuscarLibro(listaDeLibros);
-                    break;
-                }
-            case 3:
-                {
-                    biblioteca.EliminarLibro(listaDeLibros);
-                    break;
-                }
-            case 4:
-                {
-                    menu = false;
-                    break; ;
-                }
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("                                             - Ingresa un número del 1 al 4.");
+            Console.ResetColor();
+            Console.ReadKey();
         }
     }
 }
@@ -97,11 +107,14 @@ static void MenuGestionUsuarios()
     bool menu = true;
     while (menu)
     {
+        try
+        {
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
         Console.WriteLine("                                             GESTIÓN DE USUARIOS");
         Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+        Console.WriteLine("");
         Console.ResetColor();
         Console.WriteLine("                                             [1] Registrar nuevo usuario");
         Console.WriteLine("                                             [2] Editar usuario");
@@ -109,7 +122,7 @@ static void MenuGestionUsuarios()
         Console.WriteLine("                                             [4] Regresar a menú principal ");
         opcion = Convert.ToInt32(Console.ReadLine());
         switch (opcion)
-        {
+            {
             case 1:
                 {
                     break;
@@ -127,8 +140,16 @@ static void MenuGestionUsuarios()
                     menu = false;
                     break; ;
                 }
+            }
         }
-    }
+        catch (Exception ex)
+        {
+        Console.ForegroundColor = ConsoleColor.DarkRed;
+        Console.WriteLine("                                             - Ingresa un número del 1 al 4.");
+        Console.ResetColor();
+        Console.ReadKey();
+        }
+}
 }
 static void MenuGestionPrestamos()
 {
@@ -136,6 +157,8 @@ static void MenuGestionPrestamos()
     bool menu = true;
     while (menu)
     {
+        try
+        {
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
@@ -148,7 +171,7 @@ static void MenuGestionPrestamos()
         Console.WriteLine("                                             [3] Regresar a menú principal ");
         opcion = Convert.ToInt32(Console.ReadLine());
         switch (opcion)
-        {
+            {
             case 1:
                 {
                     break;
@@ -162,8 +185,16 @@ static void MenuGestionPrestamos()
                     menu = false;
                     break; ;
                 }
+            }
         }
+        catch (Exception ex)
+        {
+        Console.ForegroundColor = ConsoleColor.DarkRed;
+        Console.WriteLine("                                             - Ingresa un número del 1 al 3.");
+        Console.ResetColor();
+        Console.ReadKey();
     }
+}
 }
 static void MostrarMenu()
 {

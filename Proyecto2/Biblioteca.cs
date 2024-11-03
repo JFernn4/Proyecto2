@@ -23,16 +23,28 @@ namespace Proyecto2
             string autor= Console.ReadLine();
                 Console.Write("                                             o ISBN: ");
             string iBSN= Console.ReadLine();
+            int indice = BusquedaSecuencialLista(listaDeLibros, listaDeLibros.First, iBSN, 0);
+            if (indice != -1)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine();
+                Console.WriteLine("                                             - ISBN ya existente");
+                Console.ResetColor();
+                Console.ReadKey();
+            }
+            else
+            {
                 Console.Write("                                             o Género: ");
-            string genero= Console.ReadLine();
-            bool disponibilidad = true;
-            Libro libro=new Libro(titulo, autor, iBSN, genero, disponibilidad);
-            listaDeLibros.AddLast(libro);
-            Console.ForegroundColor= ConsoleColor.DarkGreen;
-            Console.WriteLine();
-            Console.WriteLine("                                             - Libro agregado exitosamente");
-            Console.ResetColor();
-            Console.ReadKey();
+                string genero = Console.ReadLine();
+                bool disponibilidad = true;
+                Libro libro = new Libro(titulo, autor, iBSN, genero, disponibilidad);
+                listaDeLibros.AddLast(libro);
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine();
+                Console.WriteLine("                                             - Libro agregado exitosamente");
+                Console.ResetColor();
+                Console.ReadKey();
+            }
         }
         public void BuscarLibro(LinkedList<Libro> listaDeLibros)
         {
@@ -43,9 +55,9 @@ namespace Proyecto2
             Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
             Console.ResetColor();
             Console.WriteLine("");
-                Console.Write("                                             o ISBN del libro que desea buscar: ");
-            string isbn= Console.ReadLine();
-            int indice= BusquedaSecuencialLista(listaDeLibros, isbn);
+                Console.Write("                                             o Título, autor o ISBN del libro que desea buscar: ");
+            string entradaBusqueda= Console.ReadLine();
+            int indice= BusquedaSecuencialLista(listaDeLibros, listaDeLibros.First,entradaBusqueda,0);
             if (indice != -1)
             {
                 int indiceActual = 0;
@@ -115,9 +127,9 @@ namespace Proyecto2
             Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
             Console.ResetColor();
             Console.WriteLine("");
-            Console.Write("                                             o ISBN del libro que desea eliminar: ");
-            string isbn = Console.ReadLine();
-            int indice = BusquedaSecuencialLista(listaDeLibros, isbn);
+            Console.Write("                                             o Título, autor o ISBN del libro que desea eliminar: ");
+            string entradaBusqueda = Console.ReadLine();
+            int indice = BusquedaSecuencialLista(listaDeLibros, listaDeLibros.First, entradaBusqueda,0);
             if (indice != -1)
             {
                 int indiceActual = 0;
@@ -125,7 +137,7 @@ namespace Proyecto2
                 {
                     if (indiceActual == indice)
                     {
-                        listaDeLibros.Remove(libro);
+                        string confirmacion = "";
                         Console.Clear();
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
@@ -133,10 +145,44 @@ namespace Proyecto2
                         Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
                         Console.ResetColor();
                         Console.WriteLine("");
-                        Console.ForegroundColor = ConsoleColor.DarkGreen;
-                        Console.WriteLine("                                             - Se ha eliminado el libro");
-                        Console.ResetColor();
-                        Console.ReadKey();
+                        Console.WriteLine("                                             Detalles del libro encontrado:");
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("                                             o "); Console.ResetColor();
+                        Console.WriteLine($"Título: {libro.Titulo}");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("                                             o "); Console.ResetColor();
+                        Console.WriteLine($"Autor: {libro.Autor}");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("                                             o "); Console.ResetColor();
+                        Console.WriteLine($"ISBN: {libro.Isbn}");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("                                             o "); Console.ResetColor();
+                        Console.WriteLine($"Género: {libro.Genero}");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("                                             o "); Console.ResetColor();
+                        Console.WriteLine($"Disponibilidad: {(libro.Disponibilidad ? "En biblioteca" : "Prestado")}");
+                        Console.WriteLine("");
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine("                                             ¿Está seguro que desea eliminar el libro? S/N");
+                        confirmacion = Console.ReadLine();
+                        switch (confirmacion)
+                        {
+                            case "s":
+                                {
+                                    Console.ForegroundColor= ConsoleColor.DarkGreen;
+                                    listaDeLibros.Remove(libro);
+                                    Console.WriteLine("                                             - Se ha eliminado el libro");
+                                    Console.ResetColor();
+                                    Console.ReadKey();
+                                    break;
+                                }
+                            case "n":
+                                {
+                                    Console.ResetColor();
+                                    break;
+                                }
+                        }
                         break;
                     }
                     else
@@ -160,20 +206,19 @@ namespace Proyecto2
                 Console.ReadKey();
             }
         }
-        public int BusquedaSecuencialLista(LinkedList<Libro> listaDeLibros, string isbn)
+        public int BusquedaSecuencialLista(LinkedList<Libro> listaDeLibros, LinkedListNode<Libro> nodoActual, string entradaBusqueda, int indice)
         {
-            int indice = 0;
-            LinkedListNode<Libro> nodoActual = listaDeLibros.First;
-            while (nodoActual != null)
+            //caso base
+            if (nodoActual == null)
             {
-                if (nodoActual.ValueRef.Isbn == isbn)
-                {
-                    return indice;
-                }
-                nodoActual = nodoActual.Next;
-                indice++;
+                return -1;
             }
-            return -1;
+            if (nodoActual.Value.Isbn == entradaBusqueda || nodoActual.Value.Titulo == entradaBusqueda || nodoActual.Value.Autor == entradaBusqueda)
+            {
+                return indice;
+            }
+            //llamada recursiva
+            return BusquedaSecuencialLista(listaDeLibros, nodoActual.Next, entradaBusqueda, indice+1);
         }
         public void RegistrarUsuario(LinkedList<Usuario> listaDeUsuarios, Usuario usuario)
         {
