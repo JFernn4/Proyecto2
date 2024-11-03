@@ -35,7 +35,7 @@ while (menu)
                     {
                         try
                         {
-                            MostrarMenu();
+                            MostrarMenuBibliotecarios();
                             opcion = Convert.ToInt32(Console.ReadLine());
                             switch (opcion)
                             {
@@ -94,9 +94,74 @@ while (menu)
             }
         case 2:
             {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                Console.WriteLine("                                             INICIO DE SESIÓN");
+                Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                Console.ResetColor();
+                Console.WriteLine("");
+                Console.Write("                                             o Nombre: ");
+                string nombre = Console.ReadLine();
+                Console.Write("                                             o Contraseña: ");
+                string contrasena = Console.ReadLine();
+                bool verificacion = biblioteca.InicioSesionLector(listaDeUsuarios, nombre, contrasena);
+                if (verificacion == true || (nombre == lectorPorDefecto.Nombre && contrasena == lectorPorDefecto.Contrasena))
+                {
+                    bool menuLector = true;
+                    int opcionLector = 0;
+                    while (menuLector)
+                    {
+                        try
+                        {
+                            MostrarMenuLectores();
+                            opcion = Convert.ToInt32(Console.ReadLine());
+                            switch (opcion)
+                            {
+                                case 1:
+                                    {
+                                        MenuGestionPrestamos();
+                                        break;
+                                    }
+                                case 2:
+                                    {
+                                        Console.Clear();
+                                        menuLector = false;
+                                        break;
+                                    }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
+                            Console.WriteLine("                                             - Ingresa un número del 1 al 5.");
+                            Console.ResetColor();
+                            Console.ReadKey();
+                        }
+                    }
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                    Console.WriteLine("                                             INICIO DE SESIÓN");
+                    Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                    Console.ResetColor();
+                    Console.WriteLine("");
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.WriteLine("                                             - Credenciales incorrectas");
+                    Console.ResetColor();
+                    Console.ReadKey();
+                }
                 break;
             }
         case 3:
+            {
+                biblioteca.RegistrarLector(listaDeUsuarios); 
+                break;
+            }
+        case 4:
             {
                 Console.Clear ();
                 menu = false;
@@ -115,7 +180,8 @@ static void MostrarMenuPrincipal()
     Console.WriteLine("");
     Console.WriteLine("                                             [1] Ingresar como bibliotecario");
     Console.WriteLine("                                             [2] Ingresar como lector");
-    Console.WriteLine("                                             [3] Salir ");
+    Console.WriteLine("                                             [3] Registrarse");
+    Console.WriteLine("                                             [4] Salir ");
 }
 static void MenuGestionLibros(Biblioteca biblioteca, LinkedList<Libro> listaDeLibros)
 {
@@ -274,7 +340,7 @@ static void MenuGestionPrestamos()
     }
 }
 }
-static void MostrarMenu()
+static void MostrarMenuBibliotecarios()
 {
     Console.Clear();
     Console.ForegroundColor = ConsoleColor.Yellow;
@@ -288,4 +354,16 @@ static void MostrarMenu()
     Console.WriteLine("                                             [3] Gestión de préstamos.");
     Console.WriteLine("                                             [4] Generar informe.");
     Console.WriteLine("                                             [5] Cerrar sesión.");
+}
+static void MostrarMenuLectores()
+{
+    Console.Clear();
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+    Console.WriteLine("                                             SISTEMA DE GESTIÓN DE BIBLIOTECA");
+    Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+    Console.ResetColor();
+    Console.WriteLine("");
+    Console.WriteLine("                                             [1] Gestión de préstamos.");
+    Console.WriteLine("                                             [2] Cerrar sesión.");
 }

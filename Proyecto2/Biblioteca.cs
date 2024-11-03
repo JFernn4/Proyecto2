@@ -20,6 +20,18 @@ namespace Proyecto2
                 return false;
             }
         }
+        public bool InicioSesionLector(LinkedList<Usuario> listaDeUsuarios, string nombre, string contrasena)
+        {
+            int indice = BusquedaSecuencialLectores(listaDeUsuarios,listaDeUsuarios.First, nombre,contrasena, 0);
+            if (indice != -1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public void AgregarLibro(LinkedList<Libro> listaDeLibros)
         {
             Console.Clear();
@@ -506,6 +518,20 @@ namespace Proyecto2
                 }
                 nodoquepasa = nodoquepasa.Next;
             }
+        }
+        public int BusquedaSecuencialLectores(LinkedList<Usuario> listaDeUsuarios,LinkedListNode<Usuario> nodoActual, string nombre, string contrasena, int indice)
+        {
+            //caso base
+            if (nodoActual == null)
+            {
+                return -1;
+            }
+            if (nodoActual.Value.Nombre == nombre && nodoActual.Value.Contrasena == contrasena)
+            {
+                return indice;
+            }
+            //llamada recursiva
+            return BusquedaSecuencialBibliotecarios(listaDeUsuarios, nodoActual.Next, nombre, contrasena, indice + 1);
         }
         public int BusquedaSecuencialBibliotecarios(LinkedList<Usuario> listaDeUsuarios, LinkedListNode<Usuario> nodoActual, string nombre,string contrasena, int indice)
         {
