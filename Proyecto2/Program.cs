@@ -136,9 +136,15 @@ static void MenuGestionUsuarios(Biblioteca biblioteca, LinkedList<Usuario> lista
                 }
             case 3:
                 {
+                    biblioteca.EditarUsuario(listaDeUsuarios);
                     break;
                 }
             case 4:
+                {
+                    biblioteca.EliminarUsuario(listaDeUsuarios);
+                    break;
+                }
+            case 5:
                 {
                     menu = false;
                     break; ;

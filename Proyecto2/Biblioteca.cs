@@ -288,6 +288,180 @@ namespace Proyecto2
                 Console.ReadKey();
             }
         }
+        public void EditarUsuario(LinkedList<Usuario> listaDeUsuarios)
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                             EDITAR USUARIO");
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
+            Console.WriteLine("");
+            Console.Write("                                             o ID del usuario que desea editar: ");
+            string iD = Console.ReadLine();
+            int indice = BusquedaSecuencialUsuarios(listaDeUsuarios, listaDeUsuarios.First, iD, 0);
+            if (indice != -1)
+            {
+                int indiceActual = 0;
+                foreach (var usuario in listaDeUsuarios)
+                {
+                    if (indiceActual == indice)
+                    {
+                        string confirmacion = "";
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                        Console.WriteLine("                                             EDITAR USUARIO");
+                        Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                        Console.ResetColor();
+                        Console.WriteLine("");
+                        Console.WriteLine("                                             Detalles del usuario encontrado:");
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("                                             o "); Console.ResetColor();
+                        Console.WriteLine($"ID: {usuario.ID}");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("                                             o "); Console.ResetColor();
+                        Console.WriteLine($"Nombre: {usuario.Nombre}");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("                                             o "); Console.ResetColor();
+                        Console.WriteLine($"Rol: {usuario.Rol}");
+                        Console.WriteLine("");
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine("                                             ¿Editar? S/N");
+                        confirmacion = Console.ReadLine();
+                        Console.ResetColor();
+                        switch (confirmacion)
+                        {
+                            case "s":
+                                {
+                                    Console.WriteLine("");
+                                    Console.Write("                                             o Nuevo nombre: ");
+                                    string nuevoNombre = Console.ReadLine();
+                                    Console.Write("                                             o Nuevo rol (Lector/Bibliotecario): ");
+                                    string nuevoRol = Console.ReadLine();
+                                    usuario.Nombre = nuevoNombre;
+                                    usuario.Rol = nuevoRol;
+                                    Console.WriteLine("");
+                                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                    Console.WriteLine("                                             - Usuario editado exitosamente");
+                                    Console.ResetColor();
+                                    Console.ReadKey();
+                                    break;
+                                }
+                            case "n":
+                                {
+                                    Console.ResetColor();
+                                    break;
+                                }
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        indiceActual++;
+                    }
+                }
+            }
+            else
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                Console.WriteLine("                                             EDITAR USUARIO");
+                Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                Console.ResetColor();
+                Console.WriteLine("");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("                                             - No se ha encontrado al usuario");
+                Console.ResetColor();
+                Console.ReadKey();
+            }
+        }
+        public void EliminarUsuario(LinkedList<Usuario>listaDeUsuarios)
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                             ELIMINAR USUARIO");
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
+            Console.WriteLine("");
+            Console.Write("                                             o ID del usuario que desea eliminar: ");
+            string iD = Console.ReadLine();
+            int indice = BusquedaSecuencialUsuarios(listaDeUsuarios, listaDeUsuarios.First, iD, 0);
+            if (indice != -1)
+            {
+                int indiceActual = 0;
+                foreach (var usuario in listaDeUsuarios)
+                {
+                    if (indiceActual == indice)
+                    {
+                        string confirmacion = "";
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                        Console.WriteLine("                                             ELIMINAR USUARIO");
+                        Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                        Console.ResetColor();
+                        Console.WriteLine("");
+                        Console.WriteLine("                                             Detalles del usuario encontrado:");
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("                                             o "); Console.ResetColor();
+                        Console.WriteLine($"ID: {usuario.ID}");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("                                             o "); Console.ResetColor();
+                        Console.WriteLine($"Nombre: {usuario.Nombre}");
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("                                             o "); Console.ResetColor();
+                        Console.WriteLine($"Rol: {usuario.Rol}");
+                        Console.WriteLine("");
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine("                                             ¿Está seguro que desea eliminar al usuario? S/N");
+                        confirmacion = Console.ReadLine();
+                        Console.ResetColor();
+                        switch (confirmacion)
+                        {
+                            case "s":
+                                {
+                                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                    listaDeUsuarios.Remove(usuario);
+                                    Console.WriteLine("                                             - Se ha eliminado al usuario");
+                                    Console.ResetColor();
+                                    Console.ReadKey();
+                                    break;
+                                }
+                            case "n":
+                                {
+                                    Console.ResetColor();
+                                    break;
+                                }
+                        }
+                        break;
+
+                    }
+                    else
+                    {
+                        indiceActual++;
+                    }
+                }
+            }
+            else
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                Console.WriteLine("                                             ELIMINAR USUARIO");
+                Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                Console.ResetColor();
+                Console.WriteLine("");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("                                             - No se ha encontrado al usuario");
+                Console.ResetColor();
+                Console.ReadKey();
+            }
+        }
         public int BusquedaSecuencialUsuarios(LinkedList<Usuario> listaDeUsuarios, LinkedListNode<Usuario>nodoActual, string iD, int indice)
         {
             //caso base
