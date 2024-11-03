@@ -19,7 +19,7 @@ while (menu)
                 }
             case 2:
                 {
-                    MenuGestionUsuarios();
+                    MenuGestionUsuarios(biblioteca, listaDeUsuarios);
                     break;
                 }
             case 3:
@@ -101,7 +101,7 @@ static void MenuGestionLibros(Biblioteca biblioteca, LinkedList<Libro> listaDeLi
         }
     }
 }
-static void MenuGestionUsuarios()
+static void MenuGestionUsuarios(Biblioteca biblioteca, LinkedList<Usuario> listaDeUsuarios)
 {
     int opcion;
     bool menu = true;
@@ -116,19 +116,22 @@ static void MenuGestionUsuarios()
         Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
         Console.WriteLine("");
         Console.ResetColor();
-        Console.WriteLine("                                             [1] Registrar nuevo usuario");
-        Console.WriteLine("                                             [2] Editar usuario");
-        Console.WriteLine("                                             [3] Eliminar usuario");
-        Console.WriteLine("                                             [4] Regresar a menú principal ");
+        Console.WriteLine("                                             [1] Registrar nuevo usuario (lector)");
+        Console.WriteLine("                                             [2] Registrar nuevo usuario (bibliotecario)");
+        Console.WriteLine("                                             [3] Editar usuario");
+        Console.WriteLine("                                             [4] Eliminar usuario");
+        Console.WriteLine("                                             [5] Regresar a menú principal ");
         opcion = Convert.ToInt32(Console.ReadLine());
         switch (opcion)
             {
             case 1:
                 {
+                    biblioteca.RegistrarLector(listaDeUsuarios);
                     break;
                 }
             case 2:
                 {
+                    biblioteca.RegistrarBibliotecario(listaDeUsuarios);
                     break;
                 }
             case 3:
@@ -145,7 +148,7 @@ static void MenuGestionUsuarios()
         catch (Exception ex)
         {
         Console.ForegroundColor = ConsoleColor.DarkRed;
-        Console.WriteLine("                                             - Ingresa un número del 1 al 4.");
+        Console.WriteLine("                                             - Ingresa un número del 1 al 5.");
         Console.ResetColor();
         Console.ReadKey();
         }

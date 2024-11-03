@@ -23,7 +23,7 @@ namespace Proyecto2
             string autor= Console.ReadLine();
                 Console.Write("                                             o ISBN: ");
             string iBSN= Console.ReadLine();
-            int indice = BusquedaSecuencialLista(listaDeLibros, listaDeLibros.First, iBSN, 0);
+            int indice = BusquedaSecuencialLibros(listaDeLibros, listaDeLibros.First, iBSN, 0);
             if (indice != -1)
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
@@ -57,7 +57,7 @@ namespace Proyecto2
             Console.WriteLine("");
                 Console.Write("                                             o Título, autor o ISBN del libro que desea buscar: ");
             string entradaBusqueda= Console.ReadLine();
-            int indice= BusquedaSecuencialLista(listaDeLibros, listaDeLibros.First,entradaBusqueda,0);
+            int indice= BusquedaSecuencialLibros(listaDeLibros, listaDeLibros.First,entradaBusqueda,0);
             if (indice != -1)
             {
                 int indiceActual = 0;
@@ -129,7 +129,7 @@ namespace Proyecto2
             Console.WriteLine("");
             Console.Write("                                             o Título, autor o ISBN del libro que desea eliminar: ");
             string entradaBusqueda = Console.ReadLine();
-            int indice = BusquedaSecuencialLista(listaDeLibros, listaDeLibros.First, entradaBusqueda,0);
+            int indice = BusquedaSecuencialLibros(listaDeLibros, listaDeLibros.First, entradaBusqueda,0);
             if (indice != -1)
             {
                 int indiceActual = 0;
@@ -206,7 +206,7 @@ namespace Proyecto2
                 Console.ReadKey();
             }
         }
-        public int BusquedaSecuencialLista(LinkedList<Libro> listaDeLibros, LinkedListNode<Libro> nodoActual, string entradaBusqueda, int indice)
+        public int BusquedaSecuencialLibros(LinkedList<Libro> listaDeLibros, LinkedListNode<Libro> nodoActual, string entradaBusqueda, int indice)
         {
             //caso base
             if (nodoActual == null)
@@ -218,48 +218,89 @@ namespace Proyecto2
                 return indice;
             }
             //llamada recursiva
-            return BusquedaSecuencialLista(listaDeLibros, nodoActual.Next, entradaBusqueda, indice+1);
+            return BusquedaSecuencialLibros(listaDeLibros, nodoActual.Next, entradaBusqueda, indice+1);
         }
-        public void RegistrarUsuario(LinkedList<Usuario> listaDeUsuarios, Usuario usuario)
+        public void RegistrarLector(LinkedList<Usuario> listaDeUsuarios)
         {
-            listaDeUsuarios.AddLast(usuario);
-            Console.WriteLine("Usuario agregado exitosamente");
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                             REGISTRAR USUARIO");
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
+            Console.WriteLine("");
+            Console.Write("                                             o ID: ");
+            string iD = Console.ReadLine();
+            int indice = BusquedaSecuencialUsuarios(listaDeUsuarios, listaDeUsuarios.First, iD, 0);
+            if (indice != -1)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine();
+                Console.WriteLine("                                             - Usuario existente");
+                Console.ResetColor();
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.Write("                                             o Nombre: ");
+                string nombre = Console.ReadLine();
+                string rol = "Lector";
+                Lector lector = new Lector(iD, nombre,rol);
+                listaDeUsuarios.AddLast(lector);
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine();
+                Console.WriteLine("                                             - Usuario registrado exitosamente");
+                Console.ResetColor();
+                Console.ReadKey();
+            }
         }
-
-        public void EditarUsuario(LinkedList<Usuario> listaDeUsuarios,int id )
+        public void RegistrarBibliotecario(LinkedList<Usuario> listaDeUsuarios)
         {
-            int indice = 0;
-            Usuario NodoEditar;
-            LinkedListNode<Usuario> nodoActualUsuario = listaDeUsuarios.First;
-            while (nodoActualUsuario != null)
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                             REGISTRAR USUARIO");
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
+            Console.WriteLine("");
+            Console.Write("                                             o ID: ");
+            string iD = Console.ReadLine();
+            int indice = BusquedaSecuencialUsuarios(listaDeUsuarios, listaDeUsuarios.First, iD, 0);
+            if (indice != -1)
             {
-
-                if (nodoActualUsuario.ValueRef.ID == id)
-                {
-            Console.WriteLine("¿Qué desea editar?");
-            Console.WriteLine("1. Nombre");
-            Console.WriteLine("2. Rol");
-            int opcion = Convert.ToInt32(Console.ReadLine());
-            switch (opcion)
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine();
+                Console.WriteLine("                                             - Usuario existente");
+                Console.ResetColor();
+                Console.ReadKey();
+            }
+            else
             {
-                case 1:
-                    Console.WriteLine("Ingrese el nuevo nombre: ");
-                    string nuevonombre = Console.ReadLine();
-                    nodoActualUsuario.ValueRef.Nombre = nuevonombre;
-                    Console.WriteLine($"Nombre editado exitosamente a {nodoActualUsuario.ValueRef.Nombre}");
-                    break;
-                case 2:
-                    Console.WriteLine("Ingrese el nuevo Rol: ");
-                    string nuevorol = Console.ReadLine();
-                    nodoActualUsuario.ValueRef.Rol = nuevorol;
-                    Console.WriteLine($"Rol editado exitosamente a {nodoActualUsuario.ValueRef.Rol}");
-                    break;
+                Console.Write("                                             o Nombre: ");
+                string nombre = Console.ReadLine();
+                string rol = "Bibliotecario";
+                Bibliotecario bibliotecario= new Bibliotecario(iD, nombre, rol);
+                listaDeUsuarios.AddLast(bibliotecario);
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine();
+                Console.WriteLine("                                             - Usuario registrado exitosamente");
+                Console.ResetColor();
+                Console.ReadKey();
             }
-                   
-                }
-                nodoActualUsuario = nodoActualUsuario.Next;
-                indice++;
+        }
+        public int BusquedaSecuencialUsuarios(LinkedList<Usuario> listaDeUsuarios, LinkedListNode<Usuario>nodoActual, string iD, int indice)
+        {
+            //caso base
+            if (nodoActual == null)
+            {
+                return -1;
             }
+            if (nodoActual.Value.ID==iD)
+            {
+                return indice;
+            }
+            //llamada recursiva
+            return BusquedaSecuencialUsuarios(listaDeUsuarios, nodoActual.Next, iD, indice + 1);
         }
         public void GenerarInforme(LinkedList<Libro> listaDeLibros)
         {
@@ -276,41 +317,6 @@ namespace Proyecto2
                 nodoquepasa = nodoquepasa.Next;
             }
         }
-        public bool EliminarUsuario(LinkedList<Usuario> listaDeUsuarios, int id)
-        {
-            LinkedListNode<Usuario> nodoActual = listaDeUsuarios.First;
-            LinkedListNode<Usuario> anterior = null;
-
-            while (nodoActual != null)
-            {
-                if (nodoActual.ValueRef.ID == id)
-                {
-                    if (anterior == null)
-                    {
-
-                        listaDeUsuarios.RemoveFirst();
-                        Console.WriteLine("Usuario retirado exitosamente.");
-                        return true;
-                    }
-                    else
-                    {
-                        listaDeUsuarios.Remove(nodoActual);
-                        Console.WriteLine("Usuario retirado exitosamente.");
-                        return true;
-                    }
-
-                }
-
-
-                anterior = nodoActual;
-                nodoActual = nodoActual.Next;
-            }
-            Console.WriteLine("Usuario no encontrado.");
-            return false;
-
-        }
-
-
     }
 }
 
