@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Proyecto2
 {
-    internal class Biblioteca
+    public class Biblioteca
     {
         public bool InicioSesionBibliotecario(LinkedList<Usuario>listaDeUsuarios, string nombre, string contrasena)
         {
@@ -89,6 +89,7 @@ namespace Proyecto2
                 int indiceActual = 0;
                 foreach (var libro in listaDeLibros)
                 {
+                    //Si indiceactual igual a indice
                     if (indiceActual == indice)
                     {
                         Console.Clear();
@@ -539,7 +540,7 @@ namespace Proyecto2
                 return indice;
             }
             //llamada recursiva
-            return BusquedaSecuencialBibliotecarios(listaDeUsuarios, nodoActual.Next, nombre, contrasena, indice + 1);
+            return BusquedaSecuencialLectores(listaDeUsuarios, nodoActual.Next, nombre, contrasena, indice + 1);
         }
         public int BusquedaSecuencialBibliotecarios(LinkedList<Usuario> listaDeUsuarios, LinkedListNode<Usuario> nodoActual, string nombre,string contrasena, int indice)
         {

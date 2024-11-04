@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Proyecto2
 {
-    internal class Lector:Usuario
+    public class Lector:Usuario
     {
         public Lector(string iD, string nombre, string contrasena, string rol) : base(iD, nombre, contrasena, rol)
         {

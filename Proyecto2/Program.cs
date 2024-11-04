@@ -1,9 +1,16 @@
-﻿using Proyecto2;
+﻿using System.Collections.Generic;
+using Proyecto2;
+Libro libro1 = new Libro(1, "Don Quijote", "Miguel de Cervantes", "123B", "Épico", true);
+
+
+Stack<Prestamo> historialAcciones = new Stack<Prestamo>();
+Queue<(Usuario, Libro)> colaEspera = new Queue<(Usuario, Libro)>();
 LinkedList<Usuario> listaDeUsuarios = new LinkedList<Usuario>();
 Biblioteca biblioteca = new Biblioteca();
 LinkedList<Libro> listaDeLibros = new LinkedList<Libro>();
 Bibliotecario bibliotecarioPorDefecto = new Bibliotecario("1232", "bibliotecario1","bibliotecario123", "Bibliotecario");
 Lector lectorPorDefecto = new Lector("4321", "lector1", "lector123", "Lector");
+Prestamo prestamo = new Prestamo("1234", libro1, bibliotecarioPorDefecto, DateTime.Now);
 bool menu = true;
 int opcion = 0;
 while (menu)
@@ -51,7 +58,7 @@ while (menu)
                                     }
                                 case 3:
                                     {
-                                        MenuGestionPrestamos();
+                                        MenuGestionPrestamos(prestamo, biblioteca, listaDeLibros, listaDeUsuarios, historialAcciones, colaEspera);
                                         break;
                                     }
                                 case 4:
@@ -120,7 +127,7 @@ while (menu)
                             {
                                 case 1:
                                     {
-                                        MenuGestionPrestamos();
+                                        MenuGestionPrestamos(prestamo, biblioteca, listaDeLibros, listaDeUsuarios, historialAcciones, colaEspera);
                                         break;
                                     }
                                 case 2:
@@ -295,7 +302,7 @@ static void MenuGestionUsuarios(Biblioteca biblioteca, LinkedList<Usuario> lista
         }
 }
 }
-static void MenuGestionPrestamos()
+static void MenuGestionPrestamos(Prestamo prestamo, Biblioteca biblioteca, LinkedList<Libro> listaDeLibros, LinkedList<Usuario> listaDeUsuarios, Stack<Prestamo> historialAcciones, Queue<(Usuario, Libro)> colaEspera)
 {
     int opcion;
     bool menu = true;
@@ -311,18 +318,27 @@ static void MenuGestionPrestamos()
         Console.WriteLine("");
         Console.ResetColor();
         Console.WriteLine("                                             [1] Solicitar préstamo");
-        Console.WriteLine("                                             [2] Devolver libro"); ;
+        Console.WriteLine("                                             [2] Devolver libro"); 
         Console.WriteLine("                                             [3] Regresar a menú principal ");
         opcion = Convert.ToInt32(Console.ReadLine());
         switch (opcion)
             {
             case 1:
                 {
-                    break;
+
+                        prestamo.PrestarLibro(biblioteca, listaDeLibros, listaDeUsuarios, historialAcciones, colaEspera);
+                        Console.WriteLine("Libro prestado exitosamente");
+                        Console.ReadKey();
+                        
+                        break;
                 }
             case 2:
                 {
-                    break;
+                        prestamo.DevolverLibro(historialAcciones, listaDeLibros);
+                        Console.WriteLine("Libro devuelto exitosamente");
+                        Console.ReadKey();
+
+                        break;
                 }
             case 3:
                 {

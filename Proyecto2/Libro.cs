@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Proyecto2
 {
-    internal class Libro
+    public class Libro
     {
         public int Stock { get; set; }
         public string Titulo { get; set; }
