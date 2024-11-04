@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using Proyecto2;
 Libro libro1 = new Libro(1, "Don Quijote", "Miguel de Cervantes", "123B", "Épico", true);
-
-
 Stack<Prestamo> historialAcciones = new Stack<Prestamo>();
 Queue<(Usuario, Libro)> colaEspera = new Queue<(Usuario, Libro)>();
 LinkedList<Usuario> listaDeUsuarios = new LinkedList<Usuario>();
 Biblioteca biblioteca = new Biblioteca();
 LinkedList<Libro> listaDeLibros = new LinkedList<Libro>();
 Bibliotecario bibliotecarioPorDefecto = new Bibliotecario("1232", "bibliotecario1","bibliotecario123", "Bibliotecario");
+listaDeUsuarios.AddLast(bibliotecarioPorDefecto);
 Lector lectorPorDefecto = new Lector("4321", "lector1", "lector123", "Lector");
+listaDeUsuarios.AddLast(lectorPorDefecto);
 Prestamo prestamo = new Prestamo("1234", libro1, bibliotecarioPorDefecto, DateTime.Now);
 bool menu = true;
 int opcion = 0;
@@ -327,17 +327,11 @@ static void MenuGestionPrestamos(Prestamo prestamo, Biblioteca biblioteca, Linke
                 {
 
                         prestamo.PrestarLibro(biblioteca, listaDeLibros, listaDeUsuarios, historialAcciones, colaEspera);
-                        Console.WriteLine("Libro prestado exitosamente");
-                        Console.ReadKey();
-                        
                         break;
                 }
             case 2:
                 {
                         prestamo.DevolverLibro(historialAcciones, listaDeLibros);
-                        Console.WriteLine("Libro devuelto exitosamente");
-                        Console.ReadKey();
-
                         break;
                 }
             case 3:
