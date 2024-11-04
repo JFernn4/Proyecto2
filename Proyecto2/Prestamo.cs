@@ -176,7 +176,7 @@ namespace Proyecto2
                                                     {
                                                         libro.Disponibilidad = false;
                                                     }
-                                                    historialAcciones.Push(prestamocola);
+                                                    historialAcciones.Push(prestamocola);//Salio?
                                                     Console.WriteLine($"{usuariobuscar.Nombre} ha tomado en préstamo el libro '{libro.Titulo}'");
                                                 }
                                             }
