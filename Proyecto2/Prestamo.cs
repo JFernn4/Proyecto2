@@ -14,7 +14,7 @@ namespace Proyecto2
         public string ID { get; set; }
         public Libro LibroPrestado { get; set; }
         public Usuario Usuario { get; set; }
-        public DateTime FechadePrestamo { get; set; }   
+        public DateTime FechadePrestamo { get; set; }
 
         public Prestamo(string id, Libro libroPrestado, Usuario usuario, DateTime fechadePrestamo)
         {
@@ -42,13 +42,13 @@ namespace Proyecto2
                     {
                         Console.WriteLine("Ingrese el ID del usuario que ha solicitado el libro:");
                         string Idbuscar = Console.ReadLine();
-                        foreach (var usuariobuscar  in listaDeUsuarios)
+                        foreach (var usuariobuscar in listaDeUsuarios)
                         {
                             if (usuariobuscar.ID == Idbuscar)
                             {
                                 if (libro.Disponibilidad)
                                 {
-                                    var prestamo = new Prestamo(idprestamo,libro, usuariobuscar, DateTime.Now);
+                                    var prestamo = new Prestamo(idprestamo, libro, usuariobuscar, DateTime.Now);
                                     libro.Stock = libro.Stock - 1;
                                     if (libro.Stock == 0)
                                     {
@@ -79,7 +79,7 @@ namespace Proyecto2
             }
         }
 
-        public void DevolverLibro(Stack<Prestamo> historialAcciones, LinkedList<Libro> listaDeLibros)
+        public void DevolverLibro(Stack<Prestamo> historialAcciones, LinkedList<Libro> listaDeLibros, Queue<(Usuario, Libro)> colaEspera, Biblioteca biblioteca, LinkedList<Usuario> listaDeUsuarios)
         {
             bool encontrado = false;
             Console.WriteLine("Ingrese el id del prestamo: ");
@@ -93,65 +93,86 @@ namespace Proyecto2
                     {
                         if (prestamo.LibroPrestado.Isbn == libro.Isbn)
                         {
-                            libro.Stock = libro.Stock+1;
+                            libro.Stock = libro.Stock + 1;
                             libro.Disponibilidad = true;
-                        if (libro.Stock == 0)
+                            if (libro.Stock != 0)
                             {
-                               // Prestamo pretamoañadir = new Prestamo(libro, ) AQUÍ NOS QUEDAMOS.
-                            }
+                                foreach (var nuevoprestamo in colaEspera)
+                                {
+                                    if (nuevoprestamo.Item2.Isbn == libro.Isbn)
+                                    {
+                                        // PrestarLibro(biblioteca, listaDeLibros, listaDeUsuarios, historialAcciones, colaEspera);
+                                        string Idbuscar = nuevoprestamo.Item1.ID;
+                                        foreach (var usuariobuscar in listaDeUsuarios)
+                                        {
+                                            if (usuariobuscar.ID == Idbuscar)
+                                            {
+                                                if (libro.Disponibilidad)
+                                                {
+                                                    Console.WriteLine("Ingrese el ID del prestamo: ");
+                                                    string idprestamo = Console.ReadLine();
+                                                    var prestamocola = new Prestamo(idprestamo, libro, usuariobuscar, DateTime.Now);
+                                                    libro.Stock = libro.Stock - 1;
+                                                    if (libro.Stock == 0)
+                                                    {
+                                                        libro.Disponibilidad = false;
+                                                    }
+                                                    historialAcciones.Push(prestamo);
+                                                    Console.WriteLine($"{usuariobuscar.Nombre} ha tomado en préstamo el libro '{libro.Titulo}'");
+                                                }
+                                            }
+                                        }
+                                    }
 
-                            break;
+
+                                }
+
+                            }
                         }
 
                     }
-
-
                 }
-            }
-            if(encontrado == false)
-            {
-                Console.WriteLine("No se encontró el id del prestamos.");
+                if (encontrado == false)
+                {
+                    Console.WriteLine("No se encontró el id del prestamo.");
+                }
             }
         }
 
-
-        public void DeshacerUltimaAccion(Stack<Prestamo> historialAcciones, LinkedList<Libro> listaDeLibros, Queue<(Usuario, Libro)> colaEspera)
-        {
-            if (historialAcciones.Count > 0)
-            {
-                var ultimaAccion = historialAcciones.Pop();
-
-                if (ultimaAccion.FechadePrestamo.Date == DateTime.Now.Date)
+                public void DeshacerUltimaAccion(Stack<Prestamo> historialAcciones, LinkedList<Libro> listaDeLibros, Queue<(Usuario, Libro)> colaEspera)
                 {
-                   
-                    if (colaEspera.Contains((ultimaAccion.Usuario, ultimaAccion.LibroPrestado)))
+                    if (historialAcciones.Count > 0)
                     {
-                        
-                        colaEspera.Enqueue((ultimaAccion.Usuario, ultimaAccion.LibroPrestado));
-                        Console.WriteLine($"Se ha deshecho el préstamo del libro '{ultimaAccion.LibroPrestado.Titulo}' a {ultimaAccion.Usuario.Nombre}, quien ha vuelto a la cola de espera.");
+                        var ultimaAccion = historialAcciones.Pop();
+
+                        if (ultimaAccion.FechadePrestamo.Date == DateTime.Now.Date)
+                        {
+
+                            if (colaEspera.Contains((ultimaAccion.Usuario, ultimaAccion.LibroPrestado)))
+                            {
+
+                                colaEspera.Enqueue((ultimaAccion.Usuario, ultimaAccion.LibroPrestado));
+                                Console.WriteLine($"Se ha deshecho el préstamo del libro '{ultimaAccion.LibroPrestado.Titulo}' a {ultimaAccion.Usuario.Nombre}, quien ha vuelto a la cola de espera.");
+                            }
+                            else
+                            {
+
+                                ultimaAccion.LibroPrestado.Disponibilidad = true;
+                                Console.WriteLine($"Se ha deshecho el préstamo del libro '{ultimaAccion.LibroPrestado.Titulo}' por {ultimaAccion.Usuario.Nombre}.");
+                            }
+                        }
+                        else
+                        {
+                            // Si la acción fue una devolución, deshacerla marcando el libro como no disponible
+                            ultimaAccion.LibroPrestado.Disponibilidad = false;
+                            Console.WriteLine($"Se ha deshecho la devolución del libro '{ultimaAccion.LibroPrestado.Titulo}' por {ultimaAccion.Usuario.Nombre}.");
+                        }
                     }
                     else
                     {
-                    
-                        ultimaAccion.LibroPrestado.Disponibilidad = true;
-                        Console.WriteLine($"Se ha deshecho el préstamo del libro '{ultimaAccion.LibroPrestado.Titulo}' por {ultimaAccion.Usuario.Nombre}.");
+                        Console.WriteLine("No hay acciones para deshacer.");
                     }
                 }
-                else
-                {
-                    // Si la acción fue una devolución, deshacerla marcando el libro como no disponible
-                    ultimaAccion.LibroPrestado.Disponibilidad = false;
-                    Console.WriteLine($"Se ha deshecho la devolución del libro '{ultimaAccion.LibroPrestado.Titulo}' por {ultimaAccion.Usuario.Nombre}.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("No hay acciones para deshacer.");
-            }
-        }
 
 
-    }
-
-}
-
+       
