@@ -122,7 +122,7 @@ namespace Proyecto2
                         Console.WriteLine($"Género: {libro.Genero}");
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("                                             o "); Console.ResetColor();
-                        Console.WriteLine($"Disponibilidad: {(libro.Disponibilidad ? "En biblioteca" : "Prestado")}");
+                        Console.WriteLine($"Disponibilidad: {(libro.Disponibilidad ? "En biblioteca" : "Sin stock")}");
                         Console.ReadKey();
                         break;
                     }
@@ -194,7 +194,7 @@ namespace Proyecto2
                         Console.WriteLine($"Género: {libro.Genero}");
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("                                             o "); Console.ResetColor();
-                        Console.WriteLine($"Disponibilidad: {(libro.Disponibilidad ? "En biblioteca" : "Prestado")}");
+                        Console.WriteLine($"Disponibilidad: {(libro.Disponibilidad ? "En biblioteca" : "Sin stock")}");
                         Console.WriteLine("");
                         Console.ForegroundColor = ConsoleColor.DarkRed;
                         Console.WriteLine("                                             ¿Está seguro que desea eliminar el libro? S/N");

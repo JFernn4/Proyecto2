@@ -26,7 +26,7 @@ namespace Proyecto2
 
 
 
-        public void PrestarLibro(Biblioteca biblioteca, LinkedList<Libro> listaDeLibros, LinkedList<Usuario> listaDeUsuarios, Stack<Prestamo> historialAcciones, Queue<(Usuario, Libro)> colaEspera)
+        public void PrestarLibro(Biblioteca biblioteca, LinkedList<Libro> listaDeLibros, LinkedList<Usuario> listaDeUsuarios, Stack<Prestamo> historialAcciones, Queue<Prestamo> colaEspera)
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -46,13 +46,8 @@ namespace Proyecto2
                 foreach (var libro in listaDeLibros)
                 {
                     if (indiceActual == indice)
-                    {
-
-                        Console.WriteLine("Ingrese el ID del usuario que ha solicitado el libro:");
-                        string Idbuscar = Console.ReadLine();
-                        foreach (var usuariobuscar in listaDeUsuarios)
-
-                            Console.WriteLine("");
+                    {                        
+                        Console.WriteLine("");
                         Console.WriteLine("                                             Detalles del libro encontrado:");
                         Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.Yellow;
@@ -72,21 +67,17 @@ namespace Proyecto2
                         Console.WriteLine($"Género: {libro.Genero}");
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("                                             o "); Console.ResetColor();
-                        Console.WriteLine($"Disponibilidad: {(libro.Disponibilidad ? "En biblioteca" : "Prestado")}");
+                        Console.WriteLine($"Disponibilidad: {(libro.Disponibilidad ? "En biblioteca" : "Sin stock")}");
                         Console.WriteLine("");
                         Console.Write("                                             o Ingrese su ID: ");
                         string idBuscar = Console.ReadLine();
                         foreach (var usuarioBuscar in listaDeUsuarios)
-
                         {
                             if (usuarioBuscar.ID == idBuscar)
                             {
                                 if (libro.Disponibilidad)
                                 {
-
-                                    var prestamo = new Prestamo(idprestamo, libro, usuarioBuscar, DateTime.Now);
-
-
+                                    Prestamo prestamo = new Prestamo(idprestamo, libro, usuarioBuscar, DateTime.Now);
                                     libro.Stock = libro.Stock - 1;
                                     if (libro.Stock == 0)
                                     {
@@ -102,7 +93,8 @@ namespace Proyecto2
                                 }
                                 else
                                 {
-                                    colaEspera.Enqueue((usuarioBuscar, libro));
+                                    Prestamo prestamoEnCola = new Prestamo (idprestamo, libro,usuarioBuscar,DateTime.Now);
+                                    colaEspera.Enqueue(prestamoEnCola);
                                     Console.WriteLine("");
                                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                                     Console.WriteLine($"                                             - {usuarioBuscar.Nombre} ha sido añadido a la cola de espera para el libro '{libro.Titulo}'");
@@ -137,65 +129,69 @@ namespace Proyecto2
             }
         }
 
-        public void DevolverLibro(Stack<Prestamo> historialAcciones, LinkedList<Libro> listaDeLibros, Queue<(Usuario, Libro)> colaEspera, Biblioteca biblioteca, LinkedList<Usuario> listaDeUsuarios)
+        public void DevolverLibro(Stack<Prestamo> historialAcciones, LinkedList<Libro> listaDeLibros, Queue<Prestamo> colaEspera)
         {
-            bool encontrado = false;
-            Console.WriteLine("Ingrese el id del prestamo: ");
-            string idevolver = Console.ReadLine();
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                             DEVOLVER LIBRO");
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
+            Console.WriteLine("");
+            Console.Write("                                             o ID del préstamo: ");
+            string iDPrestamoBuscar = Console.ReadLine();
+
+            Prestamo prestamoEncontrado = null;
             foreach (var prestamo in historialAcciones)
             {
-                if (prestamo.ID == idevolver)
+                if (prestamo.ID == iDPrestamoBuscar)
                 {
-                    encontrado = true;
-                    foreach (var libro in listaDeLibros)
-                    {
-                        if (prestamo.LibroPrestado.Isbn == libro.Isbn)
-                        {
-                            libro.Stock = libro.Stock + 1;
-                            libro.Disponibilidad = true;
-                            if (libro.Stock == 1)
-                            {
-                          
-                                foreach (var nuevoprestamo in colaEspera)
-                                {
-                                    if (nuevoprestamo.Item2.Isbn == libro.Isbn)
-                                    {
-                                        // PrestarLibro(biblioteca, listaDeLibros, listaDeUsuarios, historialAcciones, colaEspera);
-                                        string Idbuscar = nuevoprestamo.Item1.ID;
-                                        foreach (var usuariobuscar in listaDeUsuarios)
-                                        {
-                                            if (usuariobuscar.ID == Idbuscar)
-                                            {
-                                                if (libro.Disponibilidad)
-                                                {
-                                                    Console.WriteLine("Ingrese el ID del prestamo: ");
-                                                    string idprestamo = Console.ReadLine();
-                                                    var prestamocola = new Prestamo(idprestamo, libro, usuariobuscar, DateTime.Now);
-                                                    libro.Stock = libro.Stock - 1;
-                                                    if (libro.Stock == 0)
-                                                    {
-                                                        libro.Disponibilidad = false;
-                                                    }
-                                                    historialAcciones.Push(prestamocola);//Salio?
-                                                    Console.WriteLine($"{usuariobuscar.Nombre} ha tomado en préstamo el libro '{libro.Titulo}'");
-                                                }
-                                            }
-                                        }
-                                    }
-
-
-                                }
-
-                            }
-                        }
-
-                    }
-                }
-                if (encontrado == false)
-                {
-                    Console.WriteLine("No se encontró el id del prestamo.");
+                    prestamoEncontrado = prestamo;
+                    break;
                 }
             }
+
+            if (prestamoEncontrado == null)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("                                             - No se encontró el préstamo.");
+                Console.ResetColor();
+                Console.ReadKey();
+                return;
+            }
+
+            foreach (var libro in listaDeLibros)
+            {
+                if (libro.Isbn == prestamoEncontrado.LibroPrestado.Isbn)
+                {
+                    libro.Stock = libro.Stock + 1;
+                    libro.Disponibilidad = true;
+                    historialAcciones.Pop();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine("");
+                    Console.WriteLine($"                                             - {prestamoEncontrado.Usuario.Nombre} ha devuelto el libro '{libro.Titulo}'");
+                    // Asignar el libro al primer usuario en cola de espera, si existe
+                    foreach (var prestamoEnCola in colaEspera)
+                    {
+                        if (prestamoEnCola.LibroPrestado.Isbn == libro.Isbn)
+                        {
+                            Usuario siguienteUsuario = prestamoEnCola.Usuario;
+                            historialAcciones.Push(new Prestamo(prestamoEnCola.ID, libro, siguienteUsuario, DateTime.Now));
+                            libro.Stock -= 1;
+                            libro.Disponibilidad = libro.Stock > 0;
+
+                            Console.WriteLine("");
+                            Console.WriteLine($"                                             - {siguienteUsuario.Nombre} ha tomado prestado el libro '{libro.Titulo}'");
+                            colaEspera.Dequeue();  // Remueve de la cola de espera
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            Console.ResetColor();
+            Console.ReadKey();
         }
 
         public void DeshacerUltimaAccion(Stack<Prestamo> historialAcciones, LinkedList<Libro> listaDeLibros, Queue<(Usuario, Libro)> colaEspera)
