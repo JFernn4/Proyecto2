@@ -318,8 +318,9 @@ static void MenuGestionPrestamos(Prestamo prestamo, Biblioteca biblioteca, Linke
         Console.WriteLine("");
         Console.ResetColor();
         Console.WriteLine("                                             [1] Solicitar préstamo");
-        Console.WriteLine("                                             [2] Devolver libro"); 
-        Console.WriteLine("                                             [3] Regresar a menú principal ");
+        Console.WriteLine("                                             [2] Devolver libro");
+        Console.WriteLine("                                             [3] Deshacer última acción");
+        Console.WriteLine("                                             [4] Regresar a menú principal ");
         opcion = Convert.ToInt32(Console.ReadLine());
         switch (opcion)
             {
@@ -331,10 +332,16 @@ static void MenuGestionPrestamos(Prestamo prestamo, Biblioteca biblioteca, Linke
                 }
             case 2:
                 {
-                        prestamo.DevolverLibro(historialAcciones, listaDeLibros);
+                        prestamo.DevolverLibro(historialAcciones, listaDeLibros, colaEspera, biblioteca, listaDeUsuarios);
                         break;
                 }
             case 3:
+                {
+                        prestamo.DeshacerUltimaAccion(historialAcciones, listaDeLibros, colaEspera);
+                        break;
+                }
+                
+            case 4:
                 {
                     menu = false;
                     break; ;
