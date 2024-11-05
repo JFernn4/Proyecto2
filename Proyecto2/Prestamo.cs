@@ -13,20 +13,21 @@ namespace Proyecto2
     {
         public Libro LibroPrestado { get; set; }
         public Usuario Usuario { get; set; }
-        public DateTime FechadePrestamo { get; set; }
+        public DateTime FechaDePrestamo { get; set; }
 
         public Prestamo(Libro libroPrestado, Usuario usuario, DateTime fechadePrestamo)
         {
             LibroPrestado = libroPrestado;
             Usuario = usuario;
-            FechadePrestamo = fechadePrestamo;
+            FechaDePrestamo = fechadePrestamo;
         }
 
 
 
-        public void PrestarLibro(Biblioteca biblioteca, LinkedList<Libro> listaDeLibros, LinkedList<Usuario> listaDeUsuarios, Stack<Prestamo> historialAcciones, Queue<Prestamo> colaEspera)
+        public void PrestarLibro(Biblioteca biblioteca, LinkedList<Libro> listaDeLibros, LinkedList<Usuario> listaDeUsuarios, Stack<Prestamo> historialAcciones, Queue<Prestamo> colaEspera, Stack<Accion> pilaDeshacer)
         {
             Console.Clear();
+            bool usuarioEncontrado=false;
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
             Console.WriteLine("                                             SOLICITAR PRÉSTAMO");
@@ -71,6 +72,7 @@ namespace Proyecto2
                         {
                             if (usuarioBuscar.ID == idBuscar)
                             {
+                                usuarioEncontrado = true;
                                 if (libro.Disponibilidad)
                                 {
                                     Prestamo prestamo = new Prestamo(libro, usuarioBuscar, DateTime.Now);
@@ -80,13 +82,15 @@ namespace Proyecto2
                                         libro.Disponibilidad = false;
                                     }
                                     historialAcciones.Push(prestamo);
+                                    Accion accion = new Accion("Prestar",prestamo,libro);
+                                    pilaDeshacer.Push(accion);
                                     libro.VecesSolicitado = libro.VecesSolicitado + 1;
                                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                                     Console.WriteLine("");
                                     Console.WriteLine($"                                             - {usuarioBuscar.Nombre} ha tomado en préstamo el libro '{libro.Titulo}'");
                                     Console.ResetColor();
                                     Console.ReadKey();
-                                    break;
+                                    return;
                                 }
                                 else
                                 {
@@ -98,11 +102,12 @@ namespace Proyecto2
                                     Console.WriteLine($"                                             - {usuarioBuscar.Nombre} ha sido añadido a la cola de espera para el libro '{libro.Titulo}'");
                                     Console.ResetColor();
                                     Console.ReadKey();
-                                    break;
+                                    return;
                                 }
                             }
+                            break;
                         }
-                        if (historialAcciones == null)
+                        if (usuarioEncontrado == false)
                         {
                             Console.WriteLine("");
                             Console.ForegroundColor = ConsoleColor.DarkRed;
@@ -127,7 +132,7 @@ namespace Proyecto2
             }
         }
 
-        public void DevolverLibro(Stack<Prestamo> historialAcciones, LinkedList<Libro> listaDeLibros, Queue<Prestamo> colaEspera)
+        public void DevolverLibro(Stack<Prestamo> historialAcciones, LinkedList<Libro> listaDeLibros, Queue<Prestamo> colaEspera, Stack<Accion> pilaDeshacer)
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -154,6 +159,7 @@ namespace Proyecto2
             if (prestamoEncontrado == null)
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("");
                 Console.WriteLine("                                             - No se encontró el préstamo.");
                 Console.ResetColor();
                 Console.ReadKey();
@@ -167,6 +173,8 @@ namespace Proyecto2
                     libro.Stock = libro.Stock + 1;
                     libro.Disponibilidad = true;
                     historialAcciones.Pop();
+                    Accion accion = new("Devolver", prestamoEncontrado, libro);
+                    pilaDeshacer.Push(accion);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine("");
                     Console.WriteLine($"                                             - {prestamoEncontrado.Usuario.Nombre} ha devuelto el libro '{libro.Titulo}'");
@@ -178,8 +186,7 @@ namespace Proyecto2
                             Usuario siguienteUsuario = prestamoEnCola.Usuario;
                             historialAcciones.Push(new Prestamo(libro, siguienteUsuario, DateTime.Now));
                             libro.Stock = libro.Stock - 1;
-                            libro.Disponibilidad = libro.Stock > 0;
-
+                            libro.Disponibilidad = libro.Stock > 0; //Si el stock es mayor a 0, Disponibilidad es true
                             Console.WriteLine("");
                             Console.WriteLine($"                                             - {siguienteUsuario.Nombre} ha tomado prestado el libro '{libro.Titulo}'");
                             colaEspera.Dequeue();  // Remueve de la cola de espera
@@ -194,39 +201,83 @@ namespace Proyecto2
             Console.ReadKey();
         }
 
-        public void DeshacerUltimaAccion(Stack<Prestamo> historialAcciones, LinkedList<Libro> listaDeLibros, Queue<Prestamo> colaEspera)
+        public void DeshacerUltimaAccion(Stack<Accion> pilaDeshacer, Stack<Prestamo> historialAcciones, Queue<Prestamo> colaEspera)
         {
-            if (historialAcciones.Count > 0)
+            if (pilaDeshacer.Count == 0)
             {
-                var ultimaAccion = historialAcciones.Pop();
-
-                if (ultimaAccion.FechadePrestamo.Date == DateTime.Now.Date)
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("                                             - No hay acciones que deshacer");
+                return;
+            }
+            Accion ultimaAccion = pilaDeshacer.Pop();
+            if (ultimaAccion.TipoDeAccion == "Prestar")
+            {
+                ultimaAccion.Libro.Stock = ultimaAccion.Libro.Stock + 1;
+                ultimaAccion.Libro.Disponibilidad = true;
+                historialAcciones.Pop();
+                Console.ForegroundColor= ConsoleColor.DarkGreen;
+                Console.WriteLine("");
+                Console.WriteLine($"                                             - El préstamo del libro '{ultimaAccion.Libro.Titulo}' ha sido deshecho.");
+                Console.ResetColor();
+                Console.ReadKey();
+            }
+            if (ultimaAccion.TipoDeAccion == "Devolver")
+            {
+                ultimaAccion.Libro.Stock = ultimaAccion.Libro.Stock - 1;
+                if (ultimaAccion.Libro.Stock == 0)
                 {
-
-                    if (colaEspera.Contains((ultimaAccion.Usuario, ultimaAccion.LibroPrestado)))
-                    {
-
-                        colaEspera.Enqueue((ultimaAccion.Usuario, ultimaAccion.LibroPrestado));
-                        Console.WriteLine($"Se ha deshecho el préstamo del libro '{ultimaAccion.LibroPrestado.Titulo}' a {ultimaAccion.Usuario.Nombre}, quien ha vuelto a la cola de espera.");
-                    }
-                    else
-                    {
-
-                        ultimaAccion.LibroPrestado.Disponibilidad = true;
-                        Console.WriteLine($"Se ha deshecho el préstamo del libro '{ultimaAccion.LibroPrestado.Titulo}' por {ultimaAccion.Usuario.Nombre}.");
-                    }
+                    ultimaAccion.Libro.Disponibilidad = false;
                 }
-                else
-                {
-                    // Si la acción fue una devolución, deshacerla marcando el libro como no disponible
-                    ultimaAccion.LibroPrestado.Disponibilidad = false;
-                    Console.WriteLine($"Se ha deshecho la devolución del libro '{ultimaAccion.LibroPrestado.Titulo}' por {ultimaAccion.Usuario.Nombre}.");
-                }
+                historialAcciones.Push(ultimaAccion.Prestamo);
+                Console.ForegroundColor=ConsoleColor.DarkGreen;
+                Console.WriteLine("");
+                Console.WriteLine($"                                             - La devolución del libro '{ultimaAccion.Libro.Titulo}' ha sido deshecha.");
+                Console.ResetColor();
+                Console.ReadKey();
+            }
+        }
+        public void GenerarInformeHistorialPrestamos(Stack<Prestamo> historialAcciones, Biblioteca biblioteca, LinkedList<Libro> listaDeLibros)
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                             INFORME DE PRESTAMOS");
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.ResetColor();
+            Console.WriteLine("");
+            if (historialAcciones.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("                                             - No hay préstamos registrados.");
+                Console.ResetColor();
             }
             else
             {
-                Console.WriteLine("No hay acciones para deshacer.");
+                LinkedList<Libro> listaDeLibrosCopia = new LinkedList<Libro>(listaDeLibros);
+                LinkedList<Libro> listaOrdenada = (biblioteca.QuickSort(listaDeLibrosCopia));
+                Libro libroMasSolicitado= listaOrdenada.First();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("                                             o "); Console.ResetColor();
+                Console.WriteLine($"Libro más solicitado: {libroMasSolicitado.Titulo}");
+                Console.WriteLine("");
+                // Iterar a través del historial de préstamos
+                foreach (var prestamo in historialAcciones)
+                {
+                    Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                    Console.WriteLine("");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write("                                             o "); Console.ResetColor();
+                    Console.WriteLine($"Usuario: {prestamo.Usuario.Nombre}");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write("                                             o "); Console.ResetColor();
+                    Console.WriteLine($"Título: {prestamo.LibroPrestado.Titulo}");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write("                                             o "); Console.ResetColor();
+                    Console.WriteLine($"Fecha de Préstamo: {prestamo.FechaDePrestamo.ToShortDateString()}");
+                    Console.WriteLine("");
+                }
             }
+            Console.ReadKey();
         }
     }
 }

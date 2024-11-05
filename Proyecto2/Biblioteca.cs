@@ -514,21 +514,6 @@ namespace Proyecto2
             //llamada recursiva
             return BusquedaSecuencialUsuarios(listaDeUsuarios, nodoActual.Next, iD, indice + 1);
         }
-        public void GenerarInforme(LinkedList<Libro> listaDeLibros)
-        {
-            LinkedListNode<Libro> nodoquepasa = listaDeLibros.First;
-            Console.WriteLine("PRESTAMOS ACTIVOS");
-            while (nodoquepasa != null)
-            {
-                if (nodoquepasa.ValueRef.Disponibilidad == false)
-                {
-
-                    Console.WriteLine($"Título del libro: {nodoquepasa.ValueRef.Titulo}, Autor: {nodoquepasa.ValueRef.Autor}, Genero: {nodoquepasa.ValueRef.Genero}, ISBN: {nodoquepasa.ValueRef.Isbn}");
-                    Console.WriteLine("");
-                }
-                nodoquepasa = nodoquepasa.Next;
-            }
-        }
         public int BusquedaSecuencialLectores(LinkedList<Usuario> listaDeUsuarios,LinkedListNode<Usuario> nodoActual, string nombre, string contrasena, int indice)
         {
             //caso base
@@ -556,6 +541,83 @@ namespace Proyecto2
             }
             //llamada recursiva
             return BusquedaSecuencialBibliotecarios(listaDeUsuarios, nodoActual.Next, nombre,contrasena, indice + 1);
+        }
+        public LinkedList<Libro> QuickSort(LinkedList<Libro> listaDeLibrosCopia)
+        {
+            // Caso base
+            if (listaDeLibrosCopia.Count <= 1)
+            {
+                return listaDeLibrosCopia; 
+            }
+
+            // Pivote
+            var pivoteLibro = listaDeLibrosCopia.First.Value; 
+            int pivote = pivoteLibro.VecesSolicitado; 
+            LinkedList<Libro> izquierda = new LinkedList<Libro>();
+            LinkedList<Libro> derecha = new LinkedList<Libro>();
+            foreach (var libro in listaDeLibrosCopia.Skip(1)) 
+            {
+                if (libro.VecesSolicitado > pivote)
+                {
+                    izquierda.AddLast(libro); 
+                }
+                else
+                {
+                    derecha.AddLast(libro); 
+                }
+            }
+
+            // Llamada recursiva
+            var resultado = QuickSort(izquierda);
+            resultado.AddLast(pivoteLibro); 
+            foreach (var libro in QuickSort(derecha))
+            {
+                resultado.AddLast(libro); // Agregar la lista derecha al resultado
+            }
+
+            return resultado; 
+        }
+
+        public void MostrarLibros(LinkedList<Libro> listaDeLibros)
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                                     LISTA DE LIBROS");
+            Console.WriteLine("                                               (Más solicitados primero)");
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("");
+            Console.ResetColor();
+            LinkedList<Libro>listaDeLibrosCopia= new LinkedList<Libro>(listaDeLibros);
+            LinkedList<Libro>listaOrdenada=(QuickSort(listaDeLibrosCopia));
+            foreach (Libro libro in listaOrdenada)
+            {
+                Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("                                             o "); Console.ResetColor();
+                Console.WriteLine($"Stock: {libro.Stock}");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("                                             o "); Console.ResetColor();
+                Console.WriteLine($"Título: {libro.Titulo}");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("                                             o "); Console.ResetColor();
+                Console.WriteLine($"Autor: {libro.Autor}");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("                                             o "); Console.ResetColor();
+                Console.WriteLine($"ISBN: {libro.Isbn}");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("                                             o "); Console.ResetColor();
+                Console.WriteLine($"Género: {libro.Genero}");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("                                             o "); Console.ResetColor();
+                Console.WriteLine($"Disponibilidad: {(libro.Disponibilidad ? "En biblioteca" : "Sin stock")}");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("                                             o "); Console.ResetColor();
+                Console.WriteLine($"Veces solicitado: {libro.VecesSolicitado}");
+
+                Console.WriteLine("");
+            }
+            Console.ReadKey();
         }
     }
 }

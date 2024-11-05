@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Proyecto2;
+Stack<Accion> pilaDeshacer = new Stack<Accion>();
 Libro libro1 = new Libro(1, "Don Quijote", "Miguel de Cervantes", "123B", "Épico", true,0);
 Stack<Prestamo> historialAcciones = new Stack<Prestamo>();
 Queue<Prestamo> colaEspera = new Queue<Prestamo>();
@@ -10,7 +12,7 @@ Bibliotecario bibliotecarioPorDefecto = new Bibliotecario("1232", "bibliotecario
 listaDeUsuarios.AddLast(bibliotecarioPorDefecto);
 Lector lectorPorDefecto = new Lector("4321", "lector1", "lector123", "Lector");
 listaDeUsuarios.AddLast(lectorPorDefecto);
-Prestamo prestamo = new Prestamo("1234", libro1, bibliotecarioPorDefecto, DateTime.Now);
+Prestamo prestamo = new Prestamo(libro1, bibliotecarioPorDefecto, DateTime.Now);
 bool menu = true;
 int opcion = 0;
 while (menu)
@@ -58,15 +60,20 @@ while (menu)
                                     }
                                 case 3:
                                     {
-                                        MenuGestionPrestamos(prestamo, biblioteca, listaDeLibros, listaDeUsuarios, historialAcciones, colaEspera);
+                                        MenuGestionPrestamos(prestamo, biblioteca, listaDeLibros, listaDeUsuarios, historialAcciones, colaEspera, pilaDeshacer);
                                         break;
                                     }
                                 case 4:
                                     {
-                                        biblioteca.GenerarInforme(listaDeLibros);
+                                        prestamo.GenerarInformeHistorialPrestamos(historialAcciones,biblioteca,listaDeLibros);
                                         break;
                                     }
                                 case 5:
+                                    {
+                                        biblioteca.MostrarLibros(listaDeLibros);
+                                        break;
+                                    }
+                                case 6:
                                     {
                                         Console.Clear();
                                         menuBibliotecario = false;
@@ -77,7 +84,7 @@ while (menu)
                         catch (Exception ex)
                         {
                             Console.ForegroundColor = ConsoleColor.DarkRed;
-                            Console.WriteLine("                                             - Ingresa un número del 1 al 5.");
+                            Console.WriteLine("                                             - Ingresa un número del 1 al 6.");
                             Console.ResetColor();
                             Console.ReadKey();
                         }
@@ -127,10 +134,15 @@ while (menu)
                             {
                                 case 1:
                                     {
-                                        MenuGestionPrestamos(prestamo, biblioteca, listaDeLibros, listaDeUsuarios, historialAcciones, colaEspera);
+                                        MenuGestionPrestamos(prestamo, biblioteca, listaDeLibros, listaDeUsuarios, historialAcciones, colaEspera, pilaDeshacer);
                                         break;
                                     }
                                 case 2:
+                                    {
+                                        biblioteca.MostrarLibros(listaDeLibros);
+                                        break;
+                                    }
+                                case 3:
                                     {
                                         Console.Clear();
                                         menuLector = false;
@@ -141,7 +153,7 @@ while (menu)
                         catch (Exception ex)
                         {
                             Console.ForegroundColor = ConsoleColor.DarkRed;
-                            Console.WriteLine("                                             - Ingresa un número del 1 al 5.");
+                            Console.WriteLine("                                             - Ingresa un número del 1 al 3.");
                             Console.ResetColor();
                             Console.ReadKey();
                         }
@@ -302,7 +314,7 @@ static void MenuGestionUsuarios(Biblioteca biblioteca, LinkedList<Usuario> lista
         }
 }
 }
-static void MenuGestionPrestamos(Prestamo prestamo, Biblioteca biblioteca, LinkedList<Libro> listaDeLibros, LinkedList<Usuario> listaDeUsuarios, Stack<Prestamo> historialAcciones, Queue<Prestamo> colaEspera)
+static void MenuGestionPrestamos(Prestamo prestamo, Biblioteca biblioteca, LinkedList<Libro> listaDeLibros, LinkedList<Usuario> listaDeUsuarios, Stack<Prestamo> historialAcciones, Queue<Prestamo> colaEspera, Stack<Accion>pilaDeshacer)
 {
     int opcion;
     bool menu = true;
@@ -327,17 +339,17 @@ static void MenuGestionPrestamos(Prestamo prestamo, Biblioteca biblioteca, Linke
             case 1:
                 {
 
-                        prestamo.PrestarLibro(biblioteca, listaDeLibros, listaDeUsuarios, historialAcciones, colaEspera);
+                        prestamo.PrestarLibro(biblioteca, listaDeLibros, listaDeUsuarios, historialAcciones, colaEspera, pilaDeshacer);
                         break;
                 }
             case 2:
                 {
-                        prestamo.DevolverLibro(historialAcciones, listaDeLibros, colaEspera);
+                        prestamo.DevolverLibro(historialAcciones, listaDeLibros, colaEspera, pilaDeshacer);
                         break;
                 }
             case 3:
                 {
-                        prestamo.DeshacerUltimaAccion(historialAcciones, listaDeLibros, colaEspera);
+                        prestamo.DeshacerUltimaAccion(pilaDeshacer, historialAcciones, colaEspera);
                         break;
                 }
                 
@@ -370,7 +382,8 @@ static void MostrarMenuBibliotecarios()
     Console.WriteLine("                                             [2] Gestión de usuarios.");
     Console.WriteLine("                                             [3] Gestión de préstamos.");
     Console.WriteLine("                                             [4] Generar informe.");
-    Console.WriteLine("                                             [5] Cerrar sesión.");
+    Console.WriteLine("                                             [5] Catálogo de libros.");
+    Console.WriteLine("                                             [6] Cerrar sesión.");
 }
 static void MostrarMenuLectores()
 {
@@ -382,5 +395,6 @@ static void MostrarMenuLectores()
     Console.ResetColor();
     Console.WriteLine("");
     Console.WriteLine("                                             [1] Gestión de préstamos.");
-    Console.WriteLine("                                             [2] Cerrar sesión.");
+    Console.WriteLine("                                             [2] Catálogo de libros.");
+    Console.WriteLine("                                             [3] Cerrar sesión.");
 }
