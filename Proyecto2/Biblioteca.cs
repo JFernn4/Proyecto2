@@ -63,7 +63,8 @@ namespace Proyecto2
                 Console.Write("                                             o Género: ");
                 string genero = Console.ReadLine();
                 bool disponibilidad = true;
-                Libro libro = new Libro(stock,titulo, autor, iBSN, genero, disponibilidad);
+                int vecesSolicitado = 0;
+                Libro libro = new Libro(stock,titulo, autor, iBSN, genero, disponibilidad, vecesSolicitado);
                 listaDeLibros.AddLast(libro);
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine();

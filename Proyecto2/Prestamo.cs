@@ -11,14 +11,12 @@ namespace Proyecto2
 {
     public class Prestamo
     {
-        public string ID { get; set; }
         public Libro LibroPrestado { get; set; }
         public Usuario Usuario { get; set; }
         public DateTime FechadePrestamo { get; set; }
 
-        public Prestamo(string id, Libro libroPrestado, Usuario usuario, DateTime fechadePrestamo)
+        public Prestamo(Libro libroPrestado, Usuario usuario, DateTime fechadePrestamo)
         {
-            ID = id;
             LibroPrestado = libroPrestado;
             Usuario = usuario;
             FechadePrestamo = fechadePrestamo;
@@ -35,8 +33,6 @@ namespace Proyecto2
             Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
             Console.ResetColor();
             Console.WriteLine("");
-            Console.Write("                                             o ID del préstamo: ");
-            string idprestamo = Console.ReadLine();
             Console.Write("                                             o ISBN del libro que desea prestar: ");
             string isbnbuscar = Console.ReadLine();
             int indice = biblioteca.BusquedaSecuencialLibros(listaDeLibros, listaDeLibros.First, isbnbuscar, 0);
@@ -77,13 +73,14 @@ namespace Proyecto2
                             {
                                 if (libro.Disponibilidad)
                                 {
-                                    Prestamo prestamo = new Prestamo(idprestamo, libro, usuarioBuscar, DateTime.Now);
+                                    Prestamo prestamo = new Prestamo(libro, usuarioBuscar, DateTime.Now);
                                     libro.Stock = libro.Stock - 1;
                                     if (libro.Stock == 0)
                                     {
                                         libro.Disponibilidad = false;
                                     }
                                     historialAcciones.Push(prestamo);
+                                    libro.VecesSolicitado = libro.VecesSolicitado + 1;
                                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                                     Console.WriteLine("");
                                     Console.WriteLine($"                                             - {usuarioBuscar.Nombre} ha tomado en préstamo el libro '{libro.Titulo}'");
@@ -93,7 +90,8 @@ namespace Proyecto2
                                 }
                                 else
                                 {
-                                    Prestamo prestamoEnCola = new Prestamo (idprestamo, libro,usuarioBuscar,DateTime.Now);
+                                    libro.VecesSolicitado = libro.VecesSolicitado + 1;
+                                    Prestamo prestamoEnCola = new Prestamo (libro,usuarioBuscar,DateTime.Now);
                                     colaEspera.Enqueue(prestamoEnCola);
                                     Console.WriteLine("");
                                     Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -138,13 +136,15 @@ namespace Proyecto2
             Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
             Console.ResetColor();
             Console.WriteLine("");
-            Console.Write("                                             o ID del préstamo: ");
-            string iDPrestamoBuscar = Console.ReadLine();
+            Console.Write("                                             o ISBN del libro prestado: ");
+            string isbnLibroBuscar = Console.ReadLine();
+            Console.Write("                                             o Ingrese su ID: ");
+            string idUsuarioBuscar= Console.ReadLine();
 
             Prestamo prestamoEncontrado = null;
             foreach (var prestamo in historialAcciones)
             {
-                if (prestamo.ID == iDPrestamoBuscar)
+                if (prestamo.Usuario.ID==idUsuarioBuscar && prestamo.LibroPrestado.Isbn == isbnLibroBuscar)
                 {
                     prestamoEncontrado = prestamo;
                     break;
@@ -176,8 +176,8 @@ namespace Proyecto2
                         if (prestamoEnCola.LibroPrestado.Isbn == libro.Isbn)
                         {
                             Usuario siguienteUsuario = prestamoEnCola.Usuario;
-                            historialAcciones.Push(new Prestamo(prestamoEnCola.ID, libro, siguienteUsuario, DateTime.Now));
-                            libro.Stock -= 1;
+                            historialAcciones.Push(new Prestamo(libro, siguienteUsuario, DateTime.Now));
+                            libro.Stock = libro.Stock - 1;
                             libro.Disponibilidad = libro.Stock > 0;
 
                             Console.WriteLine("");
@@ -194,7 +194,7 @@ namespace Proyecto2
             Console.ReadKey();
         }
 
-        public void DeshacerUltimaAccion(Stack<Prestamo> historialAcciones, LinkedList<Libro> listaDeLibros, Queue<(Usuario, Libro)> colaEspera)
+        public void DeshacerUltimaAccion(Stack<Prestamo> historialAcciones, LinkedList<Libro> listaDeLibros, Queue<Prestamo> colaEspera)
         {
             if (historialAcciones.Count > 0)
             {

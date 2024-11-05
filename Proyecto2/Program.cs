@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Proyecto2;
-Libro libro1 = new Libro(1, "Don Quijote", "Miguel de Cervantes", "123B", "Épico", true);
+Libro libro1 = new Libro(1, "Don Quijote", "Miguel de Cervantes", "123B", "Épico", true,0);
 Stack<Prestamo> historialAcciones = new Stack<Prestamo>();
 Queue<Prestamo> colaEspera = new Queue<Prestamo>();
 LinkedList<Usuario> listaDeUsuarios = new LinkedList<Usuario>();
@@ -332,15 +332,7 @@ static void MenuGestionPrestamos(Prestamo prestamo, Biblioteca biblioteca, Linke
                 }
             case 2:
                 {
-<<<<<<< HEAD
-<<<<<<< HEAD
                         prestamo.DevolverLibro(historialAcciones, listaDeLibros, colaEspera);
-=======
-                        prestamo.DevolverLibro(historialAcciones, listaDeLibros, colaEspera, biblioteca, listaDeUsuarios);
->>>>>>> b2b1145a778fb2a484af91c177c7c0fbfdafda70
-=======
-                        prestamo.DevolverLibro(historialAcciones, listaDeLibros, colaEspera, biblioteca, listaDeUsuarios);
->>>>>>> b2b1145a778fb2a484af91c177c7c0fbfdafda70
                         break;
                 }
             case 3:

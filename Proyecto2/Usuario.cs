@@ -12,7 +12,6 @@ namespace Proyecto2
         public string Nombre { get; set; }
         public string Contrasena { get; set; }
         public string Rol { get; set; }
-        s
         public Usuario(string iD, string nombre, string contrasena, string rol)
         {
             ID = iD;

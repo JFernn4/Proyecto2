@@ -15,7 +15,8 @@ namespace Proyecto2
         public string Isbn  { get; set; }
         public string Genero { get; set; }
         public bool Disponibilidad { get; set; } 
-        public Libro(int stock, string titulo, string autor, string iSBN, string genero, bool disponibilidad)
+        public int VecesSolicitado { get; set; }
+        public Libro(int stock, string titulo, string autor, string iSBN, string genero, bool disponibilidad, int vecesSolicitado)
         { 
             Stock = stock;
             Titulo = titulo;
@@ -23,6 +24,7 @@ namespace Proyecto2
             Isbn = iSBN;
             Genero = genero;
             Disponibilidad = disponibilidad;
+            VecesSolicitado = vecesSolicitado;
         }
         
     }
