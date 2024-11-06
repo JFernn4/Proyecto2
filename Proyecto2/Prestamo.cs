@@ -105,15 +105,6 @@ namespace Proyecto2
                                     return;
                                 }
                             }
-                            break;
-                        }
-                        if (usuarioEncontrado == false)
-                        {
-                            Console.WriteLine("");
-                            Console.ForegroundColor = ConsoleColor.DarkRed;
-                            Console.WriteLine("                                             - No se encontró al usuario");
-                            Console.ResetColor();
-                            Console.ReadKey();
                         }
                     }
                     else
@@ -121,6 +112,14 @@ namespace Proyecto2
                         indiceActual++;
                     }
                 }
+            }
+            if (usuarioEncontrado == false)
+            {
+                Console.WriteLine("");
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("                                             - No se encontró al usuario");
+                Console.ResetColor();
+                Console.ReadKey();
             }
             else
             {
