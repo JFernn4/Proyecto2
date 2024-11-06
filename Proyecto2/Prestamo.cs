@@ -223,6 +223,9 @@ namespace Proyecto2
             if (ultimaAccion.TipoDeAccion == "Devolver")
             {
                 ultimaAccion.Libro.Stock = ultimaAccion.Libro.Stock - 1;
+                if(ultimaAccion.Libro.Stock - 1 < 0)
+                {
+                    ultimaAccion.Libro.Stock ==0
                 if (ultimaAccion.Libro.Stock == 0)
                 {
                     ultimaAccion.Libro.Disponibilidad = false;
@@ -233,6 +236,7 @@ namespace Proyecto2
                 Console.WriteLine($"                                             - La devolución del libro '{ultimaAccion.Libro.Titulo}' ha sido deshecha.");
                 Console.ResetColor();
                 Console.ReadKey();
+                }
             }
         }
         public void GenerarInformeHistorialPrestamos(Stack<Prestamo> historialAcciones, Biblioteca biblioteca, LinkedList<Libro> listaDeLibros)
